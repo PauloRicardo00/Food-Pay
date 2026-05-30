@@ -1,0 +1,6 @@
+@FoodPay.API_HostAddress = http://localhost:5090
+
+GET {{FoodPay.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

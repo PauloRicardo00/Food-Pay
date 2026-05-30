@@ -1,0 +1,75 @@
+/* Conteúdo específico do aluno no mobile — layout geral em styles/mobile.css */
+
+.aluno-home-greeting,
+.aluno-mobile-cta {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .aluno-home-greeting {
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .aluno-home-greeting h1 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .aluno-home-greeting p {
+    margin-top: 4px;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+  }
+
+  .aluno-mobile-cta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 16px 18px;
+    border: none;
+    border-radius: 14px;
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: left;
+    box-shadow: 0 4px 14px rgba(30, 58, 138, 0.25);
+  }
+
+  .aluno-mobile-cta__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .aluno-side {
+    order: 1;
+  }
+
+  .cardapio-panel {
+    order: 2;
+  }
+
+  .saldo-card {
+    width: 100%;
+  }
+
+  .pedidos-aluno-list li {
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .pedidos-aluno-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}

@@ -1,0 +1,55 @@
+/* Estilos globais: desktop (app.css) + regras só para celular (mobile.css) */
+@import "./styles/app.css";
+@import "./styles/mobile.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-primary: #0b2d5c;
+  --color-primary-light: #1a4a8a;
+  --color-bg: #f5f7fb;
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+  --color-white: #ffffff;
+  --font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a.auth-btn-secondary {
+  display: block;
+  text-align: center;
+  line-height: 1.25;
+}
