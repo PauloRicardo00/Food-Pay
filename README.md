@@ -1,8 +1,6 @@
 <div align="center">
 
-<img src="public/favicon.svg" alt="FoodPay Logo" width="80" />
-
-# FoodPay
+# 🍽️ FoodPay
 
 **Sistema de Gestão Financeira de Alimentação Escolar**
 
@@ -10,7 +8,7 @@
 [![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite)](https://vitejs.dev/)
 [![.NET](https://img.shields.io/badge/.NET-8-512BD4?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com/)
 [![SQL Server](https://img.shields.io/badge/SQL_Server-2022-CC2927?style=flat-square&logo=microsoftsqlserver)](https://www.microsoft.com/sql-server)
-[![Stripe](https://img.shields.io/badge/Stripe-API-635BFF?style=flat-square&logo=stripe)](https://stripe.com/)
+[![Stripe](https://img.shields.io/badge/Stripe-API-635BFF?style=flat-squares&logo=stripe)](https://stripe.com/)
 [![JWT](https://img.shields.io/badge/Auth-JWT-000000?style=flat-square&logo=jsonwebtokens)](https://jwt.io/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
