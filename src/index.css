@@ -1,0 +1,73 @@
+/* Estilos globais: desktop (app.css) + regras só para celular (mobile.css) */
+@import "./styles/app.css";
+@import "./styles/mobile.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Paleta SENAI vermelha (mesmo idioma da tela de login) */
+  --food-gradient-bg: radial-gradient(ellipse at top, #7a241f 0%, #3d1410 60%, #2a0c0a 100%);
+  --food-gradient-primary: linear-gradient(135deg, #c8202a 0%, #ef5b3a 100%);
+  --food-card: #fdfaf7;
+  --food-text: #2a1410;
+  --food-muted: #8a6f68;
+  --food-border: #ead9d3;
+  --food-primary: #c8202a;
+  --food-primary-strong: #7a241f;
+  --food-accent-soft: #fdf2f1;
+  --food-accent-tint: #fbeae7;
+  --food-shadow-elegant: 0 25px 60px -20px rgba(60, 14, 10, 0.55);
+  --food-shadow-card: 0 20px 50px -25px rgba(45, 10, 8, 0.5);
+  --food-shadow-soft: 0 8px 24px -12px rgba(60, 14, 10, 0.18);
+
+  /* Tokens legados mapeados para a nova paleta */
+  --color-primary: var(--food-primary);
+  --color-primary-light: #ef5b3a;
+  --color-bg: #f7efea;
+  --color-text: var(--food-text);
+  --color-text-muted: var(--food-muted);
+  --color-white: #ffffff;
+  --color-border: var(--food-border);
+  --font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.005em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a.auth-btn-secondary {
+  display: block;
+  text-align: center;
+  line-height: 1.25;
+}
