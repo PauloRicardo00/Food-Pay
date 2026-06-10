@@ -1,6 +1,6 @@
 /**
- * Componente raiz: apenas delega para o sistema de rotas.
- * Mantém App.jsx simples — a lógica de páginas fica em routes/AppRoutes.jsx.
+ * Componente raiz da aplicação.
+ * Mantido mínimo — a lógica de roteamento fica em AppRoutes.
  */
 import AppRoutes from "./routes/AppRoutes";
 

@@ -1,6 +1,9 @@
 /**
- * Estados visuais enquanto dados carregam ou falham.
- * Usado nas dashboards antes de renderizar o conteúdo principal.
+ * Componentes de estado visual para carregamento e erro de dados.
+ *
+ * Uso padrão nos dashboards:
+ *   if (loading) return <LoadingState />;
+ *   if (error)   return <ErrorState error={error} onRetry={refetch} />;
  */
 
 /** Exibido enquanto useAsync.loading === true */
@@ -12,10 +15,12 @@ export function LoadingState({ message = "Carregando..." }) {
   );
 }
 
-/** Exibido quando a API/mock lança erro; onRetry chama refetch do hook */
+/**
+ * Exibido quando a chamada de dados retorna erro.
+ * onRetry, quando fornecido, chama refetch do hook useAsync.
+ */
 export function ErrorState({ error, onRetry }) {
-  const message =
-    error?.message || "Não foi possível carregar os dados. Tente novamente.";
+  const message = error?.message || "Não foi possível carregar os dados. Tente novamente.";
 
   return (
     <div className="data-state data-state--error">

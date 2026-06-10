@@ -1,6 +1,11 @@
 /**
- * Guarda de rota: só renderiza filhos se o usuário estiver logado com o perfil correto.
- * Usado em AppRoutes.jsx envolvendo AlunoShell, FuncionarioLayout, etc.
+ * Guarda de rota que garante acesso somente a usuários autenticados
+ * com o perfil correto.
+ *
+ * - Não autenticado  → redireciona para /login?perfil=<perfil>
+ * - Perfil incorreto → redireciona para a área do perfil do usuário logado
+ * - Enquanto valida a sessão (booting) → exibe tela de carregamento
+ *   para evitar flash indesejado de conteúdo ou redirecionamento prematuro
  */
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -9,7 +14,6 @@ function ProtectedRoute({ perfil, children }) {
   const { user, isAuthenticated, booting } = useAuth();
   const location = useLocation();
 
-  // Enquanto verifica sessão, mostra loading (evita flash de login)
   if (booting) {
     return (
       <div className="app-loading-screen">
@@ -18,12 +22,10 @@ function ProtectedRoute({ perfil, children }) {
     );
   }
 
-  // Sem login → manda para tela de login com o perfil na query (?perfil=aluno)
   if (!isAuthenticated) {
     return <Navigate to={`/login?perfil=${perfil}`} state={{ from: location }} replace />;
   }
 
-  // Logado com perfil diferente → redireciona para a área correta do usuário
   if (user.perfil !== perfil) {
     return <Navigate to={`/${user.perfil}`} replace />;
   }

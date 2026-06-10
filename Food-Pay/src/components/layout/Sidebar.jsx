@@ -1,6 +1,6 @@
 /**
- * Menu lateral fixo (somente desktop).
- * No celular o menu equivalente é o MobileDrawer (botão ☰).
+ * Menu lateral fixo — visível apenas em desktop (≥ 768px via CSS).
+ * No mobile o equivalente é o MobileDrawer, acessado pelo botão ☰.
  */
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -11,9 +11,9 @@ function Sidebar({ items, basePath, hideExitOnHome = false, className = "" }) {
   const navigate = useNavigate();
   const { logout } = useAuth();
 
-  // Na página inicial do perfil, opcionalmente esconde "Sair" (ex.: boas-vindas do aluno)
-  const isHome =
-    location.pathname === basePath || location.pathname === `${basePath}/`;
+  const isHome = location.pathname === basePath || location.pathname === `${basePath}/`;
+
+  /** hideExitOnHome permite ocultar "Sair" na tela inicial de boas-vindas */
   const showExit = !(hideExitOnHome && isHome);
 
   function handleLogout() {
@@ -21,27 +21,15 @@ function Sidebar({ items, basePath, hideExitOnHome = false, className = "" }) {
     navigate("/");
   }
 
-  /** Destaca o link da rota atual */
+  /** Marca o link ativo: correspondência exata para a raiz, startsWith para sub-rotas */
   function isActive(path) {
-    if (path === basePath) {
-      return location.pathname === path;
-    }
+    if (path === basePath) return location.pathname === path;
     return location.pathname.startsWith(path);
   }
 
   return (
     <aside className={`app-sidebar ${className}`.trim()}>
-      <div className="app-sidebar__brand">
-        <div className="app-sidebar__logo" aria-hidden="true">
-          <Icon name="utensils" size={22} />
-        </div>
-        <div className="app-sidebar__text">
-          <strong>Food Pay</strong>
-          <span>Sistema de Gestão de Alimentação</span>
-        </div>
-      </div>
-
-      <nav className="app-sidebar__nav">
+      <nav className="app-sidebar__nav app-sidebar__nav--top">
         {items.map((item) => (
           <Link
             key={item.path}

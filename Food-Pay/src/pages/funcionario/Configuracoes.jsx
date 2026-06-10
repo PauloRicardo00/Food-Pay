@@ -1,3 +1,8 @@
+/**
+ * Preferências do funcionário persistidas no localStorage.
+ * Configura notificações de novos pedidos, auto-refresh do painel
+ * e som de alerta ao receber pedidos.
+ */
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 

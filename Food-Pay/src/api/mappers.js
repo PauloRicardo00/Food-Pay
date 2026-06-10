@@ -1,10 +1,12 @@
 /**
- * Adaptadores (mappers): convertem JSON do backend para o formato que as telas esperam.
- * Se o backend usar nomes diferentes, altere aqui em vez de mudar cada componente visual.
+ * Camada de mapeamento entre o JSON do backend e os objetos esperados pela UI.
+ *
+ * Centralizar aqui evita que mudanças de contrato na API se propaguem
+ * para os componentes — basta atualizar o mapper correspondente.
  */
 import { formatCurrency } from "../utils/format";
 
-/** Um pedido na lista do funcionário */
+/** Normaliza um pedido retornado pelo painel do funcionário */
 export function mapPedidoFuncionario(p) {
   return {
     id: p.id,
@@ -16,6 +18,7 @@ export function mapPedidoFuncionario(p) {
   };
 }
 
+/** Normaliza um produto do cardápio para exibição */
 export function mapProdutoCardapio(p) {
   return {
     id: p.id,
@@ -26,6 +29,7 @@ export function mapProdutoCardapio(p) {
   };
 }
 
+/** Normaliza um pedido do histórico do aluno */
 export function mapPedidoAluno(p) {
   return {
     id: p.id,
@@ -37,6 +41,7 @@ export function mapPedidoAluno(p) {
   };
 }
 
+/** Normaliza uma transação financeira */
 export function mapTransacao(t) {
   return {
     id: t.id,
@@ -49,7 +54,7 @@ export function mapTransacao(t) {
   };
 }
 
-/** Resposta GET /funcionario/dashboard → objeto usado em DashboardFuncionario */
+/** Transforma a resposta de GET /funcionario/dashboard no formato usado pelo componente */
 export function mapDashboardFuncionario(data) {
   return {
     resumoPagamentos: {
@@ -58,23 +63,21 @@ export function mapDashboardFuncionario(data) {
     },
     pedidosRecentes: (data.pedidosRecentes ?? []).map(mapPedidoFuncionario),
     kpis: {
-      pedidosDia: data.kpis?.pedidosDia ?? 0,
-      pedidosDiaVariacao: data.kpis?.pedidosDiaVariacao ?? 0,
-      faturamentoDiaFormatado: formatCurrency(data.kpis?.faturamentoDia ?? 0),
-      faturamentoDiaVariacao: data.kpis?.faturamentoDiaVariacao ?? 0,
-      pedidosEmAndamento: data.kpis?.pedidosEmAndamento ?? 0,
-      pedidosEntregues: data.kpis?.pedidosEntregues ?? 0,
+      pedidosDia:               data.kpis?.pedidosDia ?? 0,
+      pedidosDiaVariacao:       data.kpis?.pedidosDiaVariacao ?? 0,
+      faturamentoDiaFormatado:  formatCurrency(data.kpis?.faturamentoDia ?? 0),
+      faturamentoDiaVariacao:   data.kpis?.faturamentoDiaVariacao ?? 0,
+      pedidosEmAndamento:       data.kpis?.pedidosEmAndamento ?? 0,
+      pedidosEntregues:         data.kpis?.pedidosEntregues ?? 0,
     },
   };
 }
 
-/** Resposta GET /aluno/dashboard */
+/** Transforma a resposta de GET /aluno/dashboard no formato usado pelo componente */
 export function mapDashboardAluno(data) {
   return {
     saldoFormatado: formatCurrency(Number(data?.aluno?.saldo ?? 0)),
-
     nomeAluno: data?.aluno?.nome ?? "Aluno",
-
     cardapio: (data?.cardapio ?? []).map((p) => ({
       id: p.id,
       nome: p.nome,
@@ -82,7 +85,6 @@ export function mapDashboardAluno(data) {
       precoFormatado: formatCurrency(Number(p.preco ?? 0)),
       imagem: p.imagem ?? p.imagemUrl ?? "",
     })),
-
     ultimosPedidos: (data?.pedidosRecentes ?? []).map((p) => ({
       id: p.id,
       data: p.dataPedido ?? "",
@@ -93,20 +95,20 @@ export function mapDashboardAluno(data) {
   };
 }
 
-/** Resposta GET /responsavel/dashboard */
+/** Transforma a resposta de GET /responsavel/dashboard no formato usado pelo componente */
 export function mapDashboardResponsavel(data) {
   return {
     dependentes: data.dependentes ?? [],
     resumo: {
-      saldoFormatado: formatCurrency(data.resumo?.saldo ?? 0),
-      limiteMensalFormatado: formatCurrency(data.resumo?.limiteMensal ?? 0),
-      gastoMesFormatado: formatCurrency(data.resumo?.gastoMes ?? 0),
-      percentualLimite: data.resumo?.percentualLimite ?? 0,
-      diasRestantes: data.resumo?.diasRestantes ?? 0,
-      fimCiclo: data.resumo?.fimCiclo ?? "",
+      saldoFormatado:         formatCurrency(data.resumo?.saldo ?? 0),
+      limiteMensalFormatado:  formatCurrency(data.resumo?.limiteMensal ?? 0),
+      gastoMesFormatado:      formatCurrency(data.resumo?.gastoMes ?? 0),
+      percentualLimite:       data.resumo?.percentualLimite ?? 0,
+      diasRestantes:          data.resumo?.diasRestantes ?? 0,
+      fimCiclo:               data.resumo?.fimCiclo ?? "",
     },
-    transacoes: (data.transacoes ?? []).map(mapTransacao),
-    gastosPorCategoria: data.gastosPorCategoria ?? [],
-    gastoTotalMesFormatado: formatCurrency(data.gastoTotalMes ?? data.resumo?.gastoMes ?? 0),
+    transacoes:               (data.transacoes ?? []).map(mapTransacao),
+    gastosPorCategoria:       data.gastosPorCategoria ?? [],
+    gastoTotalMesFormatado:   formatCurrency(data.gastoTotalMes ?? data.resumo?.gastoMes ?? 0),
   };
 }

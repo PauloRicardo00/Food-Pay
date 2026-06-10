@@ -1,3 +1,7 @@
+/**
+ * Histórico de transações financeiras da cantina.
+ * Consome GET /TransacoesFinanceiras com visão do funcionário.
+ */
 import { useEffect, useState } from "react";
 import { api } from "../../api/client";
 

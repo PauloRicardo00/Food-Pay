@@ -1,5 +1,5 @@
 /**
- * Layout mobile (≤768px) — não altera o desktop.
+ * Layout mobile (≤768px) — paleta SENAI vermelha (auth-modern style).
  * Barra superior compacta, menu lateral em gaveta (☰) e navegação inferior.
  */
 
@@ -24,48 +24,82 @@
     justify-content: space-between;
     gap: 12px;
     padding: 12px 16px;
-    background: #fff;
-    border-bottom: 1px solid #e2e8f0;
+    background: var(--food-card);
+    border-bottom: 1px solid var(--food-border);
+    box-shadow: var(--food-shadow-soft);
     position: sticky;
     top: 0;
     z-index: 50;
   }
 
   .mobile-topbar--primary {
-    background: var(--color-primary);
+    background: var(--food-gradient-bg);
     border-bottom-color: rgba(255, 255, 255, 0.12);
     color: #fff;
+    box-shadow: var(--food-shadow-elegant);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mobile-topbar--primary::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.4;
+    background-image:
+      radial-gradient(280px circle at 10% 0%, rgba(200, 32, 42, 0.45), transparent 60%),
+      radial-gradient(260px circle at 90% 100%, rgba(122, 36, 31, 0.55), transparent 60%);
+  }
+
+  .mobile-topbar--primary > * {
+    position: relative;
+    z-index: 1;
   }
 
   .mobile-topbar__title {
     flex: 1;
     text-align: center;
     font-size: 1.05rem;
-    font-weight: 700;
+    font-weight: 750;
+    letter-spacing: -0.02em;
   }
 
   .mobile-topbar__btn {
     width: 40px;
     height: 40px;
-    border: none;
-    border-radius: 10px;
-    background: #f1f5f9;
-    color: var(--color-text);
+    border: 1px solid var(--food-border);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--food-text);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+
+  .mobile-topbar__btn:hover {
+    border-color: var(--food-primary);
+    color: var(--food-primary);
   }
 
   .mobile-topbar__btn--light {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: #fff;
+    backdrop-filter: blur(10px);
+  }
+
+  .mobile-topbar__btn--light:hover {
+    background: rgba(255, 255, 255, 0.2);
     color: #fff;
   }
 
   .app-layout {
     flex-direction: column;
     min-height: 100vh;
-    padding-bottom: 68px;
+    padding-bottom: 72px;
   }
 
   .app-main {
@@ -80,15 +114,17 @@
   }
 
   .app-mobile-greeting h1 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    line-height: 1.3;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.25;
+    color: var(--food-text);
   }
 
   .app-mobile-greeting p {
     margin-top: 4px;
     font-size: 0.88rem;
-    color: var(--color-text-muted);
+    color: var(--food-muted);
   }
 
   .app-content {
@@ -102,10 +138,10 @@
     right: 0;
     bottom: 0;
     z-index: 100;
-    background: #fff;
-    border-top: 1px solid #e2e8f0;
+    background: var(--food-card);
+    border-top: 1px solid var(--food-border);
     padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
-    box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 -10px 30px -10px rgba(60, 14, 10, 0.18);
   }
 
   .app-bottom-nav__link {
@@ -114,16 +150,18 @@
     flex-direction: column;
     align-items: center;
     gap: 3px;
-    padding: 6px 4px;
-    border-radius: 10px;
-    color: #64748b;
+    padding: 8px 4px;
+    border-radius: 12px;
+    color: var(--food-muted);
     font-size: 0.65rem;
-    font-weight: 600;
+    font-weight: 650;
     text-align: center;
+    transition: color 0.2s ease, background 0.2s ease;
   }
 
   .app-bottom-nav__link.is-active {
-    color: var(--color-primary);
+    color: var(--food-primary);
+    background: var(--food-accent-soft);
   }
 
   /* Drawer */
@@ -138,7 +176,8 @@
     position: absolute;
     inset: 0;
     border: none;
-    background: rgba(15, 23, 42, 0.45);
+    background: rgba(45, 10, 8, 0.55);
+    backdrop-filter: blur(4px);
   }
 
   .mobile-drawer__panel {
@@ -147,12 +186,29 @@
     left: 0;
     bottom: 0;
     width: min(300px, 88vw);
-    background: var(--color-primary);
+    background: var(--food-gradient-bg);
     color: #fff;
     display: flex;
     flex-direction: column;
-    padding: 16px;
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
+    padding: 18px;
+    box-shadow: var(--food-shadow-elegant);
+    overflow: hidden;
+  }
+
+  .mobile-drawer__panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.42;
+    background-image:
+      radial-gradient(420px circle at 0% 0%, rgba(200, 32, 42, 0.45), transparent 60%),
+      radial-gradient(360px circle at 100% 100%, rgba(122, 36, 31, 0.55), transparent 60%);
+  }
+
+  .mobile-drawer__panel > * {
+    position: relative;
+    z-index: 1;
   }
 
   .mobile-drawer__head {
@@ -160,20 +216,22 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
   }
 
   .mobile-drawer__brand {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     align-items: flex-start;
   }
 
   .mobile-drawer__logo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.15);
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -183,27 +241,35 @@
   .mobile-drawer__brand strong {
     display: block;
     font-size: 1rem;
+    font-weight: 750;
+    letter-spacing: -0.02em;
   }
 
   .mobile-drawer__brand span {
     display: block;
     font-size: 0.68rem;
-    opacity: 0.85;
-    margin-top: 2px;
+    opacity: 0.78;
+    margin-top: 3px;
     line-height: 1.35;
   }
 
   .mobile-drawer__close {
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.22);
     background: rgba(255, 255, 255, 0.12);
     color: #fff;
     width: 36px;
     height: 36px;
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    backdrop-filter: blur(10px);
+    transition: background 0.2s ease;
+  }
+
+  .mobile-drawer__close:hover {
+    background: rgba(255, 255, 255, 0.22);
   }
 
   .mobile-drawer__nav {
@@ -219,14 +285,21 @@
     align-items: center;
     gap: 10px;
     padding: 12px 14px;
-    border-radius: 10px;
-    color: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.88);
     font-size: 0.92rem;
+    font-weight: 500;
+    transition: background 0.2s ease;
+  }
+
+  .mobile-drawer__link:hover {
+    background: rgba(255, 255, 255, 0.1);
   }
 
   .mobile-drawer__link.is-active {
-    background: rgba(255, 255, 255, 0.18);
-    font-weight: 600;
+    background: rgba(255, 255, 255, 0.2);
+    font-weight: 650;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
   }
 
   .mobile-drawer__exit {
@@ -241,12 +314,18 @@
     font-size: 0.92rem;
     width: 100%;
     text-align: left;
+    border-radius: 10px;
+    transition: background 0.2s ease;
+  }
+
+  .mobile-drawer__exit:hover {
+    background: rgba(255, 255, 255, 0.1);
   }
 
   /* Aluno */
   .aluno-layout {
     min-height: 100vh;
-    padding-bottom: 68px;
+    padding-bottom: 72px;
   }
 
   .aluno-body {
@@ -311,12 +390,13 @@
   }
 
   .produto-card {
-    flex: 0 0 140px;
+    flex: 0 0 144px;
     scroll-snap-align: start;
   }
 
   .placeholder-page__card {
-    padding: 20px;
+    padding: 22px;
+    border-radius: 18px;
     max-width: none;
   }
 
@@ -342,12 +422,14 @@
   .auth-brand {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
   }
 
   .auth-brand h1 {
     margin-top: 0;
     font-size: 1.05rem;
+    font-weight: 750;
+    letter-spacing: -0.02em;
   }
 
   .auth-brand p {
@@ -357,7 +439,11 @@
   .auth-logo {
     width: 38px;
     height: 38px;
+    border-radius: 12px;
     font-size: 1.1rem;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
   }
 
   .auth-main {
@@ -366,12 +452,198 @@
   }
 
   .auth-card {
-    padding: 22px 18px;
-    border-radius: 14px;
+    padding: 24px 20px;
+    border-radius: 20px;
     max-width: 100%;
+    background: var(--food-card);
+    border: 1px solid var(--food-border);
+    box-shadow: var(--food-shadow-elegant);
   }
 
   .auth-option {
-    padding: 12px 14px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid var(--food-border);
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
   }
+
+  .auth-option:hover {
+    transform: translateY(-1px);
+    border-color: var(--food-primary);
+    background: var(--food-accent-soft);
+  }
+}
+/* =========================================================
+   Responsividade global — garante que tudo caiba no celular
+   ========================================================= */
+
+@media (max-width: 768px) {
+  html, body, #root {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  img, video, canvas, svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  h1 { font-size: clamp(1.35rem, 5vw, 1.75rem) !important; }
+  h2 { font-size: clamp(1.15rem, 4.5vw, 1.45rem) !important; }
+  h3 { font-size: clamp(1rem, 4vw, 1.2rem) !important; }
+
+  /* Tabelas roláveis horizontalmente */
+  table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  /* Qualquer grid vira coluna por padrão */
+  [class*="-grid"],
+  [class*="__grid"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Dois por linha para KPIs/ações rápidas/estatísticas */
+  .kpi-grid,
+  .stats-grid,
+  .quick-actions,
+  .funcionario-dashboard .quick-actions,
+  .funcionario-dashboard__kpis,
+  .responsavel-dashboard__kpis,
+  .aluno-dashboard__kpis,
+  .cardapio-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  /* Cards de produto em grid 2-col no celular */
+  .cardapio-grid { gap: 12px !important; }
+  .cardapio-card-head h3 { font-size: 0.95rem; }
+  .cardapio-card-price { font-size: 1rem; }
+  .cardapio-card-btn { padding: 8px 10px; font-size: 0.8rem; }
+
+  /* Cabeçalhos flexíveis quebram em duas linhas */
+  .panel-card__header,
+  .cardapio-header,
+  .page-header,
+  .dashboard-header,
+  .section-header,
+  .funcionario-dashboard__header,
+  .responsavel-dashboard__header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .cardapio-search { width: 100%; max-width: none; }
+
+  /* Tabs roláveis horizontalmente */
+  .cardapio-tabs,
+  .tabs,
+  .filter-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Cards/painéis com padding confortável */
+  .panel-card,
+  .info-card,
+  .stat-card,
+  .kpi-card,
+  .saldo-card,
+  .placeholder-page__card {
+    padding: 16px !important;
+    border-radius: 16px !important;
+  }
+
+  /* Botões largos por padrão dentro de formulários */
+  form .btn,
+  form button[type="submit"],
+  .form-actions button {
+    width: 100%;
+  }
+
+  /* Listas e blocos não ultrapassam viewport */
+  .app-content > *,
+  .aluno-main > *,
+  main > * {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  /* Inputs full width */
+  input, select, textarea {
+    max-width: 100%;
+    width: 100%;
+    font-size: 16px; /* evita zoom no iOS */
+  }
+
+  /* Sidebar das páginas auth vira topo */
+  .auth-sidebar {
+    flex-wrap: wrap;
+  }
+
+  /* Modal cabe na tela */
+  .modal,
+  .modal-content,
+  [role="dialog"] > div {
+    max-width: 94vw !important;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .kpi-grid,
+  .stats-grid,
+  .quick-actions,
+  .cardapio-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .app-bottom-nav__link {
+    font-size: 0.6rem;
+  }
+}
+
+/* =========================================================
+   Parte 2 — Responsividade adicional (grids inline e tabelas)
+   ========================================================= */
+@media (max-width: 768px) {
+  /* Forçar grids inline de 2/3 colunas para 1 coluna no celular */
+  [style*="grid-template-columns: 1fr 1fr"],
+  [style*="gridTemplateColumns: 1fr 1fr"],
+  [style*="grid-template-columns: repeat(2"],
+  [style*="grid-template-columns: repeat(3"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Títulos gigantes ficam mais proporcionais no celular */
+  h1[style*="font-size: 42px"],
+  h1[style*="fontSize: \"42px\""] {
+    font-size: 28px !important;
+  }
+
+  /* Padding das páginas */
+  [style*="padding: \"30px\""],
+  [style*="padding:30px"],
+  [style*="padding: 30px"] {
+    padding: 18px !important;
+  }
+
+  /* Tabelas com rolagem horizontal */
+  table { display: block; overflow-x: auto; max-width: 100%; }
+
+  /* Header do perfil empilhado */
+  .profile-header { flex-direction: column !important; text-align: center; }
+}
+
+/* Padding lateral em telas muito estreitas */
+@media (max-width: 380px) {
+  .auth-card, .app-content { padding-left: 14px !important; padding-right: 14px !important; }
 }

@@ -11,13 +11,30 @@
 }
 
 :root {
-  --color-primary: #0b2d5c;
-  --color-primary-light: #1a4a8a;
-  --color-bg: #f5f7fb;
-  --color-text: #1e293b;
-  --color-text-muted: #64748b;
+  /* Paleta SENAI vermelha (mesmo idioma da tela de login) */
+  --food-gradient-bg: radial-gradient(ellipse at top, #7a241f 0%, #3d1410 60%, #2a0c0a 100%);
+  --food-gradient-primary: linear-gradient(135deg, #c8202a 0%, #ef5b3a 100%);
+  --food-card: #fdfaf7;
+  --food-text: #2a1410;
+  --food-muted: #8a6f68;
+  --food-border: #ead9d3;
+  --food-primary: #c8202a;
+  --food-primary-strong: #7a241f;
+  --food-accent-soft: #fdf2f1;
+  --food-accent-tint: #fbeae7;
+  --food-shadow-elegant: 0 25px 60px -20px rgba(60, 14, 10, 0.55);
+  --food-shadow-card: 0 20px 50px -25px rgba(45, 10, 8, 0.5);
+  --food-shadow-soft: 0 8px 24px -12px rgba(60, 14, 10, 0.18);
+
+  /* Tokens legados mapeados para a nova paleta */
+  --color-primary: var(--food-primary);
+  --color-primary-light: #ef5b3a;
+  --color-bg: #f7efea;
+  --color-text: var(--food-text);
+  --color-text-muted: var(--food-muted);
   --color-white: #ffffff;
-  --font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --color-border: var(--food-border);
+  --font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
 html,
@@ -31,6 +48,7 @@ body {
   color: var(--color-text);
   background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.005em;
 }
 
 a {
@@ -52,4 +70,25 @@ a.auth-btn-secondary {
   display: block;
   text-align: center;
   line-height: 1.25;
+}
+/* ========================
+   Acabamento Parte 2
+   ======================== */
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Acessibilidade: foco visível consistente */
+:where(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid var(--food-primary);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Cards inline genéricos ganham hover suave */
+[style*="border-radius: 18px"][style*="background: #fff"]:hover,
+[style*="border-radius:18px"][style*="background:#fff"]:hover {
+  box-shadow: var(--food-shadow-soft);
 }

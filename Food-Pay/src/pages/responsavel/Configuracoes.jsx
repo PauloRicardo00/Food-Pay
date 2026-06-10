@@ -1,3 +1,7 @@
+/**
+ * Configurações do responsável — edição de dados cadastrais e
+ * preferências de notificação (alertas de limite e novos pedidos).
+ */
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { api } from "../../api/client";
@@ -110,6 +114,7 @@ function ConfiguracoesResponsavel() {
             Salvar configurações
           </button>
         </section>
+
       </div>
     </div>
   );

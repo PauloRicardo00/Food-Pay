@@ -1,36 +1,42 @@
 /**
- * Mapa de caminhos da API REST.
- * O integrador do backend implementa estes endpoints (ou ajusta os paths aqui).
- * Prefixo completo = VITE_API_URL + path (ex.: http://localhost:3000/api/aluno/dashboard)
+ * Mapa centralizado de endpoints da API.
+ *
+ * Alterar um caminho aqui reflete em todo o sistema sem precisar
+ * buscar referências espalhadas nos services e pages.
  */
 export const endpoints = {
   auth: {
-    login: "/auth/login",
-    register: "/auth/register",
-    me: "/auth/me",
-    logout: "/auth/logout",
+    login:                "/Auth/login",
+    register:             "/Auth/register",
+    me:                   "/Auth/me",
+    logout:               "/Auth/logout",
+    solicitarResetSenha:  "/Auth/solicitar-reset-senha",
+    confirmarResetSenha:  "/Auth/confirmar-reset-senha",
   },
+
   funcionario: {
-    dashboard: "/funcionario/dashboard",
-    pedidos: "/funcionario/pedidos",
+    dashboard:  "/funcionario/dashboard",
+    pedidos:    "/funcionario/pedidos",
     pagamentos: "/funcionario/pagamentos",
-    cardapio: "/funcionario/cardapio",
+    cardapio:   "/funcionario/cardapio",
     relatorios: "/funcionario/relatorios",
   },
+
   aluno: {
     dashboard: "/aluno/dashboard",
-    cardapio: "/aluno/cardapio",
-    pedidos: "/aluno/pedidos",
-    pagamentos: "/aluno/pagamentos",
+    cardapio:  "/aluno/cardapio",
+    pedidos:   "/aluno/pedidos",
+    pagamentos:"/aluno/pagamentos",
     historico: "/aluno/historico",
-    perfil: "/aluno/perfil",
+    perfil:    "/aluno/perfil",
   },
+
   responsavel: {
-    dashboard: "/responsavel/dashboard",
-    dependentes: "/responsavel/dependentes",
-    limite: "/responsavel/limite",
-    gastos: "/responsavel/gastos",
-    historico: "/responsavel/historico",
+    dashboard:    "/responsavel/dashboard",
+    dependentes:  "/responsavel/dependentes",
+    limite:       "/responsavel/limite",
+    gastos:       "/responsavel/gastos",
+    historico:    "/responsavel/historico",
     notificacoes: "/responsavel/notificacoes",
   },
 };

@@ -1,3 +1,7 @@
+/**
+ * Perfil do aluno — dados cadastrais, saldo, limite diário e resumo de pedidos.
+ * Combina GET /Auth/me e GET /Pedidos/meus para montar as estatísticas.
+ */
 import { useEffect, useState } from "react";
 import { api } from "../../api/client";
 
@@ -51,10 +55,13 @@ function Perfil() {
 
       <div style={gridStyle}>
         <InfoCard titulo="Saldo atual" valor={`R$ ${Number(usuario.saldo).toFixed(2)}`} />
-        <InfoCard titulo="Limite diário" valor={`R$ ${Number(usuario.limiteDiario).toFixed(2)}`} />
+        <InfoCard titulo="Limite diário" valor={`R$ ${Number(usuario.limiteDiario || 0).toFixed(2)}`} />
+        <InfoCard titulo="Limite semanal" valor={`R$ ${Number(usuario.limiteSemanal || 0).toFixed(2)}`} />
+        <InfoCard titulo="Limite mensal" valor={`R$ ${Number(usuario.limiteMensal || 0).toFixed(2)}`} />
         <InfoCard titulo="Total de pedidos" valor={pedidos.length} />
         <InfoCard titulo="Total gasto" valor={`R$ ${totalGasto.toFixed(2)}`} />
       </div>
+
     </div>
   );
 }

@@ -1,13 +1,23 @@
+/**
+ * Dashboard do aluno — tela inicial após login.
+ * Exibe saldo disponível, cardápio do dia e os últimos pedidos.
+ * Permite adicionar itens ao carrinho diretamente desta tela.
+ */
 import { CheckCircle2, Clock, Plus, ShoppingBag, Wallet } from "lucide-react";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import StatusBadge from "../../components/ui/StatusBadge";
 import { ErrorState, LoadingState } from "../../components/ui/DataState";
 import { useAlunoDashboard } from "../../hooks/useAlunoDashboard";
+import { useAuth } from "../../context/AuthContext";
 import "./aluno.css";
 
 function DashboardAluno() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // Chave única por aluno
+  const carrinhoKey = `carrinho_aluno_${user?.id ?? user?.email ?? "anonimo"}`;
 
   const { primeiroNome = "Aluno" } = useOutletContext() ?? {};
   const { data, loading, error, refetch } = useAlunoDashboard();
@@ -17,7 +27,7 @@ function DashboardAluno() {
   if (!data) return null;
 
   function handleAdicionar(produto) {
-    const carrinhoAtual = JSON.parse(localStorage.getItem("carrinho")) || [];
+    const carrinhoAtual = JSON.parse(localStorage.getItem(carrinhoKey)) || [];
 
     const produtoFormatado = {
       id: produto.id,
@@ -27,7 +37,7 @@ function DashboardAluno() {
 
     const novoCarrinho = [...carrinhoAtual, produtoFormatado];
 
-    localStorage.setItem("carrinho", JSON.stringify(novoCarrinho));
+    localStorage.setItem(carrinhoKey, JSON.stringify(novoCarrinho));
 
     toast.success(`${produto.nome} adicionado ao carrinho!`);
   }

@@ -1,5 +1,6 @@
 /**
- * Dados do painel da cantina / funcionário.
+ * Service do funcionário — carrega dados do painel da cantina.
+ * Em modo mock retorna dados estáticos; em produção chama a API real.
  */
 import { api } from "../api/client";
 import { endpoints } from "../api/endpoints";
@@ -11,7 +12,7 @@ function delay(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-/** KPIs e pedidos recentes — GET /funcionario/dashboard */
+/** KPIs e pedidos recentes do dia — GET /funcionario/dashboard */
 export async function getDashboard() {
   if (env.useMock) {
     await delay(300);

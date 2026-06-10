@@ -1,5 +1,6 @@
 /**
- * Configura o layout do perfil funcionário (cantina).
+ * Layout do perfil funcionário.
+ * Passa as configurações específicas (menu, rotas, textos) para o DashboardShell compartilhado.
  */
 import DashboardShell from "../components/layout/DashboardShell";
 import { bottomNavFuncionario, menuFuncionario } from "../config/navigation";
@@ -13,7 +14,6 @@ function FuncionarioLayout() {
       pageTitle="Gerencie pedidos, produtos e relatórios da cantina."
       userLabel="Funcionário"
       bottomNavItems={bottomNavFuncionario}
-      hideExitOnHome
     />
   );
 }

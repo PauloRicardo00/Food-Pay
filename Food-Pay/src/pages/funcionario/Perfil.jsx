@@ -1,3 +1,7 @@
+/**
+ * Perfil do funcionário — dados cadastrais e estatísticas de atendimento
+ * (pedidos processados e produtos cadastrados no cardápio).
+ */
 import { useEffect, useState } from "react";
 import { api } from "../../api/client";
 

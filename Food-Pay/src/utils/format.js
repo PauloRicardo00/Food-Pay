@@ -1,8 +1,9 @@
 /**
- * Funções de formatação para exibição na interface (não alteram dados da API).
+ * Utilitários de formatação para exibição na interface.
+ * Não alteram os dados originais — apenas os preparam para leitura humana.
  */
 
-/** Número ou string → "R$ 120,00" no padrão brasileiro */
+/** Converte um número ou string numérica para o padrão monetário brasileiro: R$ 120,00 */
 export function formatCurrency(valor) {
   const numero = typeof valor === "string" ? parseFloat(valor) : valor;
   if (Number.isNaN(numero)) return valor;
@@ -12,7 +13,7 @@ export function formatCurrency(valor) {
   }).format(numero);
 }
 
-/** Variação percentual com sinal (+12% ou -5%) */
+/** Formata variação percentual com sinal explícito: +12% ou -5% */
 export function formatVariacaoPercentual(valor) {
   const n = Number(valor);
   const sinal = n >= 0 ? "+" : "";

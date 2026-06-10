@@ -1,14 +1,15 @@
 /**
- * Etiqueta colorida de status de pedido/pagamento.
- * statusMap associa texto do backend à classe CSS (verde, laranja, azul).
+ * Badge colorida de status de pedido ou pagamento.
+ * O mapeamento status → classe CSS segue a paleta definida em app.css.
+ * Status desconhecidos recebem a cor neutra (azul).
  */
 const statusMap = {
-  Entregue: "badge--green",
+  Entregue:    "badge--green",
   "Em preparo": "badge--orange",
-  Preparando: "badge--orange",
-  Confirmado: "badge--blue",
-  Pago: "badge--green",
-  Pendente: "badge--orange",
+  Preparando:  "badge--orange",
+  Confirmado:  "badge--blue",
+  Pago:        "badge--green",
+  Pendente:    "badge--orange",
 };
 
 function StatusBadge({ status }) {

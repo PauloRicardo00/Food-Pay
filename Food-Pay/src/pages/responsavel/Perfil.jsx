@@ -1,3 +1,6 @@
+/**
+ * Perfil do responsável — dados cadastrais e lista de dependentes vinculados.
+ */
 import { useEffect, useState } from "react";
 import { api } from "../../api/client";
 

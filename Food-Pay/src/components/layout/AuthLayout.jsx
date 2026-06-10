@@ -1,26 +1,22 @@
 /**
- * Moldura visual das telas de autenticação (login, cadastro, boas-vindas).
- * Barra lateral com marca + card central com título e conteúdo (children).
+ * Layout compartilhado das telas de autenticação (login, cadastro, recuperação de senha).
+ * Estrutura: barra lateral com a marca à esquerda + card central com título e conteúdo.
  */
 import { Link } from "react-router-dom";
-import "../../pages/auth/auth.css";
 
 function AuthLayout({ title, subtitle, children, showExit = true }) {
   return (
     <div className="auth-page">
       <aside className="auth-sidebar">
         <div className="auth-brand">
-          <div className="auth-logo" aria-hidden="true">
-            🍴
-          </div>
+          <div className="auth-logo" aria-hidden="true">🍴</div>
           <h1>Food Pay</h1>
           <p>Sistema de Gestão de Alimentação</p>
         </div>
-        {/* showExit false na tela inicial — não faz sentido "Sair" antes de entrar */}
+
+        {/* showExit: false na tela de escolha de perfil, onde "Sair" não faz sentido */}
         {showExit && (
-          <Link to="/" className="auth-exit">
-            Sair
-          </Link>
+          <Link to="/" className="auth-exit">Sair</Link>
         )}
       </aside>
 

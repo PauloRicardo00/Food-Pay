@@ -1,13 +1,42 @@
 /**
- * Cliente HTTP único para falar com o backend.
- * Centraliza URL, headers, token JWT e tratamento de erro.
+ * Cliente HTTP centralizado para comunicação com o backend.
+ *
+ * Responsabilidades:
+ * - Montar a URL final a partir da base definida em .env
+ * - Injetar o Bearer token JWT em rotas protegidas
+ * - Normalizar erros de API em ApiError (com status HTTP)
+ * - Expor atalhos tipados: api.get / post / put / patch / delete
  */
 import { env } from "../config/env";
 
-// Chave usada no localStorage para persistir o token entre recarregamentos
 const TOKEN_KEY = "foodpay_token";
 
-/** Erro customizado com status HTTP — facilita exibir mensagem na UI */
+/** Extrai uma mensagem amigável de diferentes formatos de erro da API */
+export function getApiErrorMessage(error, fallback = "Erro na requisição.") {
+  const data = error?.body ?? error?.response?.data;
+
+  if (typeof data === "string" && data.trim()) return data;
+
+  if (data && typeof data === "object") {
+    if (data.message) return data.message;
+    if (data.mensagem) return data.mensagem;
+    if (data.erro) return data.erro;
+    if (data.error) return data.error;
+    if (data.title) return data.title;
+    if (Array.isArray(data.errors)) return data.errors.join(" ");
+
+    if (data.errors && typeof data.errors === "object") {
+      const mensagens = Object.values(data.errors).flat().filter(Boolean);
+      if (mensagens.length > 0) return mensagens.join(" ");
+    }
+  }
+
+  if (error?.message && error.message !== "Network Error") return error.message;
+
+  return fallback;
+}
+
+/** Erro customizado que preserva o status HTTP — facilita tratar 401, 404 etc. na UI */
 export class ApiError extends Error {
   constructor(message, status, body) {
     super(message);
@@ -21,6 +50,7 @@ export function getToken() {
   return localStorage.getItem(TOKEN_KEY);
 }
 
+/** Persiste ou remove o token conforme o valor recebido */
 export function setToken(token) {
   if (token) {
     localStorage.setItem(TOKEN_KEY, token);
@@ -30,9 +60,11 @@ export function setToken(token) {
 }
 
 /**
- * Função base de requisição — usada por api.get, api.post, etc.
- * @param {string} path caminho relativo (ex.: /aluno/dashboard)
- * @param {object} options method, body, headers, auth
+ * Função base de requisição usada por todos os métodos do objeto api.
+ *
+ * @param {string} path  - Caminho relativo, ex.: /aluno/dashboard
+ * @param {object} options - { method, body, headers, auth }
+ *   auth: false desativa o envio do Bearer token (login, cadastro)
  */
 export async function apiRequest(path, options = {}) {
   const { method = "GET", body, headers = {}, auth = true } = options;
@@ -43,21 +75,16 @@ export async function apiRequest(path, options = {}) {
     ...headers,
   };
 
-  // Rotas protegidas enviam Bearer token se o usuário estiver logado
   if (auth) {
     const token = getToken();
-    if (token) {
-      requestHeaders.Authorization = `Bearer ${token}`;
-    }
+    if (token) requestHeaders.Authorization = `Bearer ${token}`;
   }
 
-  // Monta URL final: base do .env + path (evita barra duplicada)
   const url = `${env.apiUrl.replace(/\/$/, "")}${path.startsWith("/") ? path : `/${path}`}`;
 
   const response = await fetch(url, {
     method,
     headers: requestHeaders,
-    // JSON.stringify converte objeto JS em string para o corpo da requisição
     body: body !== undefined ? JSON.stringify(body) : undefined,
   });
 
@@ -67,25 +94,26 @@ export async function apiRequest(path, options = {}) {
   if (contentType.includes("application/json")) {
     data = await response.json();
   } else if (response.status !== 204) {
-    // 204 = sucesso sem corpo (comum em DELETE)
+    // 204 No Content: resposta válida sem corpo (comum em DELETE)
     data = await response.text();
   }
 
   if (!response.ok) {
-    const message =
-      (data && (data.message || data.error)) ||
-      `Erro na requisição (${response.status})`;
+    const message = getApiErrorMessage(
+      { body: data },
+      `Erro na requisição (${response.status})`
+    );
     throw new ApiError(message, response.status, data);
   }
 
   return data;
 }
 
-/** Atalhos para não repetir method em cada chamada */
+/** Atalhos para os métodos HTTP mais comuns */
 export const api = {
-  get: (path, options) => apiRequest(path, { ...options, method: "GET" }),
-  post: (path, body, options) => apiRequest(path, { ...options, method: "POST", body }),
-  put: (path, body, options) => apiRequest(path, { ...options, method: "PUT", body }),
-  patch: (path, body, options) => apiRequest(path, { ...options, method: "PATCH", body }),
-  delete: (path, options) => apiRequest(path, { ...options, method: "DELETE" }),
+  get:    (path, options)        => apiRequest(path, { ...options, method: "GET" }),
+  post:   (path, body, options)  => apiRequest(path, { ...options, method: "POST",  body }),
+  put:    (path, body, options)  => apiRequest(path, { ...options, method: "PUT",   body }),
+  patch:  (path, body, options)  => apiRequest(path, { ...options, method: "PATCH", body }),
+  delete: (path, options)        => apiRequest(path, { ...options, method: "DELETE" }),
 };

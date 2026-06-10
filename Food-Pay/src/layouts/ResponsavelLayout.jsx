@@ -1,6 +1,6 @@
 /**
- * Configura o layout do perfil responsável.
- * Repassa menus e textos para DashboardShell (componente visual compartilhado).
+ * Layout do perfil responsável.
+ * Passa as configurações específicas (menu, rotas, textos) para o DashboardShell compartilhado.
  */
 import DashboardShell from "../components/layout/DashboardShell";
 import { bottomNavResponsavel, menuResponsavel } from "../config/navigation";
@@ -14,7 +14,6 @@ function ResponsavelLayout() {
       pageTitle="Acompanhe os gastos e limites de seus dependentes."
       userLabel="Responsável"
       bottomNavItems={bottomNavResponsavel}
-      hideExitOnHome
     />
   );
 }

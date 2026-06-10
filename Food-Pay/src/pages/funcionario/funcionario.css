@@ -1,1 +1,143 @@
-/* Estilos específicos do funcionário (extensível) */
+/* Específico do funcionário (mobile) — layout geral em styles/mobile.css.
+   Tokens disponíveis: --food-primary, --food-gradient-primary, --food-card,
+   --food-border, --food-muted, --food-shadow-card. */
+
+/* ============ Dashboard charts: layout responsivo ============ */
+.funcionario-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-top: 22px;
+  width: 100%;
+}
+
+.funcionario-chart-card {
+  background: #fff;
+  border: 1px solid #eef2f7;
+  border-radius: 18px;
+  padding: 22px 24px;
+  box-shadow: 0 8px 24px -18px rgba(60, 14, 10, 0.18);
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.funcionario-chart-card--full { grid-column: 1 / -1; min-height: auto; }
+
+.funcionario-bar-chart {
+  flex: 1;
+  min-height: 240px;
+}
+
+@media (max-width: 900px) {
+  .funcionario-charts-grid { grid-template-columns: 1fr; }
+  .funcionario-chart-card { min-height: 260px; }
+}
+
+/* ============ Funcionario cardapio: filtro status ============ */
+.fcard-status-tabs {
+  display: inline-flex;
+  gap: 8px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+.fcard-status-tab {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #475569;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.fcard-status-tab:hover { border-color: #cbd5e1; color: #0f172a; }
+.fcard-status-tab.is-active {
+  background: #b91c1c;
+  border-color: #b91c1c;
+  color: #fff;
+}
+.fcard-status-tab-count {
+  background: rgba(15, 23, 42, 0.08);
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.fcard-status-tab.is-active .fcard-status-tab-count {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ============ Estoque do cardápio ============ */
+.fcard-stock-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.fcard-stock-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #ecfdf5;
+  color: #166534;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.fcard-stock-badge.is-low {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.fcard-stock-badge.is-empty {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.fcard-stock-editor {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.fcard-stock-editor input {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+}
+
+.fcard-stock-editor button {
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: #0b2c66;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.fcard-stock-editor button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.fcard-btn--delete {
+  background: #7f1d1d;
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .fcard-stock-editor {
+    grid-template-columns: 1fr;
+  }
+}

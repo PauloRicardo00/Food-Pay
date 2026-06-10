@@ -1,6 +1,13 @@
 /**
  * Contexto global de autenticação.
- * Qualquer componente pode usar useAuth() para saber se há usuário logado e chamar login/logout.
+ *
+ * Provê ao restante da aplicação:
+ *   user          – objeto do usuário logado (ou null)
+ *   isAuthenticated – booleano derivado de user
+ *   booting       – true enquanto a sessão é validada na inicialização
+ *   login / register / logout – ações que atualizam o estado global
+ *
+ * Uso: importe useAuth() em qualquer componente dentro de <AuthProvider>.
  */
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {
@@ -11,16 +18,17 @@ import {
   register as registerService,
 } from "../services/authService";
 
-// Contexto React — valor null até o Provider preencher
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  // Inicia com usuário salvo no localStorage (se existir)
   const [user, setUser] = useState(getStoredUser);
-  // booting = true enquanto valida sessão ao abrir o app
   const [booting, setBooting] = useState(true);
 
-  // Ao carregar a página, tenta recuperar/validar usuário (mock ou API /auth/me)
+  /**
+   * Ao montar, valida a sessão existente no localStorage.
+   * Em modo real chama GET /auth/me; em mock retorna o usuário salvo.
+   * O flag `active` evita atualização de estado após desmontagem.
+   */
   useEffect(() => {
     let active = true;
     fetchCurrentUser().then((u) => {
@@ -29,13 +37,9 @@ export function AuthProvider({ children }) {
         setBooting(false);
       }
     });
-    // Cleanup: evita setState se o componente desmontar antes da resposta
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, []);
 
-  // useMemo evita recriar o objeto a cada render (só muda se user/booting mudar)
   const value = useMemo(
     () => ({
       user,
@@ -60,10 +64,9 @@ export function AuthProvider({ children }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
+/** Hook que lança erro se usado fora do AuthProvider */
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) {
-    throw new Error("useAuth deve ser usado dentro de AuthProvider");
-  }
+  if (!ctx) throw new Error("useAuth deve ser usado dentro de AuthProvider");
   return ctx;
 }

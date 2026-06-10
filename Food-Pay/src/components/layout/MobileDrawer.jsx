@@ -1,6 +1,7 @@
 /**
- * Menu lateral deslizante no celular (gaveta).
- * Lista todos os itens do perfil + botão Sair (exceto na home se hideExitOnHome).
+ * Menu lateral deslizante para mobile.
+ * Renderizado sobre a página com backdrop; fecha ao clicar fora ou navegar.
+ * Não renderiza nada quando fechado para evitar elementos com foco invisível.
  */
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
@@ -9,17 +10,14 @@ import Icon from "../ui/Icon";
 
 function MobileDrawer({ open, onClose, items, basePath, hideExitOnHome = false }) {
   const location = useLocation();
-  const navigate = useNavigate();
+  const navigate  = useNavigate();
   const { logout } = useAuth();
 
-  const isHome =
-    location.pathname === basePath || location.pathname === `${basePath}/`;
+  const isHome   = location.pathname === basePath || location.pathname === `${basePath}/`;
   const showExit = !(hideExitOnHome && isHome);
 
   function isActive(path) {
-    if (path === basePath) {
-      return location.pathname === path;
-    }
+    if (path === basePath) return location.pathname === path;
     return location.pathname.startsWith(path);
   }
 
@@ -29,27 +27,13 @@ function MobileDrawer({ open, onClose, items, basePath, hideExitOnHome = false }
     navigate("/");
   }
 
-  function handleNavClick() {
-    onClose();
-  }
-
-  // Não renderiza nada se fechado — evita foco em elementos invisíveis
   if (!open) return null;
 
   return (
     <div className="mobile-drawer" role="dialog" aria-modal="true" aria-label="Menu">
       <button type="button" className="mobile-drawer__backdrop" onClick={onClose} aria-label="Fechar menu" />
       <aside className="mobile-drawer__panel">
-        <div className="mobile-drawer__head">
-          <div className="mobile-drawer__brand">
-            <span className="mobile-drawer__logo" aria-hidden="true">
-              <Icon name="utensils" size={20} />
-            </span>
-            <div>
-              <strong>Food Pay</strong>
-              <span>Sistema de Gestão de Alimentação</span>
-            </div>
-          </div>
+        <div className="mobile-drawer__head mobile-drawer__head--compact">
           <button type="button" className="mobile-drawer__close" onClick={onClose} aria-label="Fechar">
             <X size={22} />
           </button>
@@ -61,7 +45,7 @@ function MobileDrawer({ open, onClose, items, basePath, hideExitOnHome = false }
               key={item.path}
               to={item.path}
               className={`mobile-drawer__link ${isActive(item.path) ? "is-active" : ""}`}
-              onClick={handleNavClick}
+              onClick={onClose}
             >
               <Icon name={item.icon} size={18} />
               <span>{item.label}</span>

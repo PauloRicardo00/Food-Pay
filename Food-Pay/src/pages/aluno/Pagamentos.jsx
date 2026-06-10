@@ -1,3 +1,7 @@
+/**
+ * Histórico de transações financeiras do aluno — GET /TransacoesFinanceiras/minhas.
+ * Exibe tipo, valor, descrição e data de cada movimentação.
+ */
 import { useEffect, useState } from "react";
 import { api } from "../../api/client";
 

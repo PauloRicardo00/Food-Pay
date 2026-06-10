@@ -1,10 +1,12 @@
 /**
  * Layout padrão de painéis (responsável e funcionário).
- * Desktop: sidebar + cabeçalho. Mobile: barra superior, gaveta e menu inferior.
+ * Estrutura igual à do Aluno: header full-width fixo no topo, sidebar abaixo.
  */
-import { useEffect, useState } from "react";
-import { contarNaoLidas } from "../../utils/notificacoes";
-import { Bell, ChevronDown, UserCircle2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { api } from "../../api/client";
+import { contarNaoLidas, criarNotificacao } from "../../utils/notificacoes";
+import { Bell, ChevronDown, UserCircle2, Utensils } from "lucide-react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import AppBottomNav from "./AppBottomNav";
@@ -22,15 +24,40 @@ function DashboardShell({
   hideExitOnHome = false,
 }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
-    <div className="app-layout">
-      <Sidebar
-        items={menuItems}
-        basePath={basePath}
-        hideExitOnHome={hideExitOnHome}
-        className="app-sidebar--desktop"
+    <div className="app-layout app-layout--stacked">
+      <MobileTopBar
+        onMenuClick={() => setDrawerOpen(true)}
+        onNotificacoesClick={() => {
+          const rota = menuItems?.find((i) => i.path?.includes("notificacoes"))?.path;
+          if (rota) navigate(rota);
+        }}
       />
+
+      <header className="app-header app-header--desktop app-header--full">
+        <div className="app-header__brand">
+          <div className="app-header__brand-icon" aria-hidden="true">
+            <Utensils size={22} />
+          </div>
+          <div className="app-header__brand-text">
+            <strong>Food Pay</strong>
+            <span>Sistema de Gestão de Alimentação</span>
+          </div>
+        </div>
+
+        {greeting ? (
+          <div className="app-header__greeting">
+            <h1>{greeting}</h1>
+            {pageTitle && <p>{pageTitle}</p>}
+          </div>
+        ) : (
+          <h1 className="app-header__title">{pageTitle}</h1>
+        )}
+
+        <HeaderActions userLabel={userLabel} basePath={basePath} />
+      </header>
 
       <MobileDrawer
         open={drawerOpen}
@@ -40,38 +67,32 @@ function DashboardShell({
         hideExitOnHome={hideExitOnHome}
       />
 
-      <div className="app-main">
-        <MobileTopBar onMenuClick={() => setDrawerOpen(true)} />
+      <div className="app-body">
+        <Sidebar
+          items={menuItems}
+          basePath={basePath}
+          hideExitOnHome={hideExitOnHome}
+          className="app-sidebar--desktop"
+        />
 
-        <header className="app-header app-header--desktop">
-          {greeting ? (
-            <div className="app-header__greeting">
+        <div className="app-main">
+          {greeting && (
+            <div className="app-mobile-greeting">
               <h1>{greeting}</h1>
               {pageTitle && <p>{pageTitle}</p>}
             </div>
-          ) : (
-            <h1 className="app-header__title">{pageTitle}</h1>
           )}
 
-          <HeaderActions userLabel={userLabel} basePath={basePath} />
-        </header>
-
-        {greeting && (
-          <div className="app-mobile-greeting">
-            <h1>{greeting}</h1>
-            {pageTitle && <p>{pageTitle}</p>}
+          <div className="app-content">
+            <Outlet />
           </div>
-        )}
 
-        <div className="app-content">
-          <Outlet />
+          <footer className="app-footer app-footer--desktop">
+            © 2026 Food Pay - Todos os direitos reservados.
+          </footer>
+
+          {bottomNavItems?.length > 0 && <AppBottomNav items={bottomNavItems} />}
         </div>
-
-        <footer className="app-footer app-footer--desktop">
-          © 2026 Food Pay - Todos os direitos reservados.
-        </footer>
-
-        {bottomNavItems?.length > 0 && <AppBottomNav items={bottomNavItems} />}
       </div>
     </div>
   );
@@ -79,37 +100,79 @@ function DashboardShell({
 
 function HeaderActions({ userLabel, basePath }) {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const [menuAberto, setMenuAberto] = useState(false);
   const [totalNotificacoes, setTotalNotificacoes] = useState(0);
+  const menuRef = useRef(null);
 
   useEffect(() => {
-    let perfil = "aluno";
+    function handleClickFora(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuAberto(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickFora);
+    return () => document.removeEventListener("mousedown", handleClickFora);
+  }, []);
 
-    if (basePath.includes("funcionario")) {
-      perfil = "funcionario";
+  useEffect(() => {
+    let ativo = true;
+
+    async function atualizarTotalNotificacoes() {
+      try {
+        if (basePath.includes("responsavel")) {
+          const data = await api.get("/Notificacoes/minhas");
+          if (ativo) setTotalNotificacoes(data.filter((n) => !n.lida).length);
+          return;
+        }
+
+        if (basePath.includes("funcionario")) {
+          const pedidos = await api.get("/pedidos");
+          const pedidosPendentes = Array.isArray(pedidos)
+            ? pedidos.filter((pedido) => pedido.status === "Pendente")
+            : [];
+
+          pedidosPendentes.forEach((pedido) => {
+            criarNotificacao(
+              "funcionario",
+              `Novo pedido #${pedido.id} recebido${pedido.alunoNome ? ` de ${pedido.alunoNome}` : ""}.`,
+              user,
+              {
+                id: `pedido-${pedido.id}`,
+                pedidoId: pedido.id,
+                dataEnvio: pedido.dataPedido ?? new Date().toISOString(),
+              },
+            );
+          });
+
+          if (ativo) setTotalNotificacoes(contarNaoLidas("funcionario", user));
+          return;
+        }
+
+        if (ativo) setTotalNotificacoes(0);
+      } catch (error) {
+        console.error("Erro ao carregar contador de notificações:", error);
+        if (ativo) setTotalNotificacoes(0);
+      }
     }
 
-    if (basePath.includes("responsavel")) {
-      perfil = "responsavel";
-    }
+    atualizarTotalNotificacoes();
+    const intervalo = setInterval(atualizarTotalNotificacoes, 3000);
 
-    setTotalNotificacoes(contarNaoLidas(perfil));
-
-    const intervalo = setInterval(() => {
-      setTotalNotificacoes(contarNaoLidas(perfil));
-    }, 1000);
-
-    return () => clearInterval(intervalo);
-  }, [basePath]);
+    return () => {
+      ativo = false;
+      clearInterval(intervalo);
+    };
+  }, [basePath, user]);
 
   function sair() {
     logout();
+    toast.success("Você saiu com sucesso.");
     navigate("/");
   }
 
   return (
-    <div className="app-header__actions" style={{ position: "relative" }}>
+    <div className="app-header__actions" style={{ position: "relative" }} ref={menuRef}>
       <button
         type="button"
         className="icon-btn"
@@ -158,7 +221,10 @@ function HeaderActions({ userLabel, basePath }) {
           <button
             type="button"
             style={dropdownItemStyle}
-            onClick={() => navigate(`${basePath}/perfil`)}
+            onClick={() => {
+              setMenuAberto(false);
+              navigate(`${basePath}/perfil`);
+            }}
           >
             Meu perfil
           </button>
@@ -182,10 +248,10 @@ const dropdownStyle = {
   right: "0",
   background: "#fff",
   borderRadius: "12px",
-  boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+  boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
   padding: "8px",
-  minWidth: "160px",
-  zIndex: 999,
+  minWidth: "180px",
+  zIndex: 9999,
 };
 
 const dropdownItemStyle = {

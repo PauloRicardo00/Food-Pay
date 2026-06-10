@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { Bell, ChevronDown, ShoppingCart, UserCircle2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { Bell, ChevronDown, ShoppingCart, UserCircle2, Utensils } from "lucide-react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { api } from "../../api/client";
@@ -12,18 +13,40 @@ import "../../pages/aluno/aluno.css";
 
 function AlunoShell() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [quantidadeCarrinho, setQuantidadeCarrinho] = useState(0);
   const [notificacoesNaoLidas, setNotificacoesNaoLidas] = useState(0);
+  const [menuAberto, setMenuAberto] = useState(false);
+  const menuRef = useRef(null);
 
   const nomeExibicao = user?.nome || "Nome do Aluno";
   const primeiroNome = nomeExibicao.split(" ")[0];
 
   useEffect(() => {
+    function handleClickFora(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuAberto(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickFora);
+    return () => document.removeEventListener("mousedown", handleClickFora);
+  }, []);
+
+  function sair() {
+    setMenuAberto(false);
+    logout();
+    toast.success("Você saiu com sucesso.");
+    navigate("/");
+  }
+
+  // Chave única por aluno para leitura do carrinho no header
+  const carrinhoKey = `carrinho_aluno_${user?.id ?? user?.email ?? "anonimo"}`;
+
+  useEffect(() => {
     function atualizarQuantidadeCarrinho() {
-      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      const carrinho = JSON.parse(localStorage.getItem(carrinhoKey)) || [];
       setQuantidadeCarrinho(carrinho.length);
     }
 
@@ -37,7 +60,8 @@ function AlunoShell() {
       window.removeEventListener("storage", atualizarQuantidadeCarrinho);
       clearInterval(intervalo);
     };
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [carrinhoKey]);
 
   useEffect(() => {
     carregarNotificacoesNaoLidas();
@@ -60,10 +84,22 @@ function AlunoShell() {
 
   return (
     <div className="aluno-layout">
-      <MobileTopBar variant="primary" onMenuClick={() => setDrawerOpen(true)} />
+      <MobileTopBar
+        variant="primary"
+        onMenuClick={() => setDrawerOpen(true)}
+        onNotificacoesClick={() => navigate("/aluno/notificacoes")}
+      />
 
       <header className="aluno-topbar aluno-topbar--desktop">
-        <div className="aluno-topbar__logo">SESI</div>
+        <div className="aluno-topbar__brand">
+          <div className="aluno-topbar__brand-icon" aria-hidden="true">
+            <Utensils size={22} />
+          </div>
+          <div className="aluno-topbar__brand-text">
+            <strong>Food Pay</strong>
+            <span>Sistema de Gestão de Alimentação</span>
+          </div>
+        </div>
 
         <div className="aluno-topbar__actions">
           <button
@@ -94,15 +130,39 @@ function AlunoShell() {
             )}
           </button>
 
-          <button
-            type="button"
-            className="user-pill user-pill--light"
-            onClick={() => navigate("/aluno/perfil")}
-          >
-            <span>{nomeExibicao}</span>
-            <UserCircle2 size={28} />
-            <ChevronDown size={16} />
-          </button>
+          <div style={{ position: "relative" }} ref={menuRef}>
+            <button
+              type="button"
+              className="user-pill user-pill--light"
+              onClick={() => setMenuAberto((v) => !v)}
+            >
+              <UserCircle2 size={28} />
+              <span>{nomeExibicao}</span>
+              <ChevronDown size={16} />
+            </button>
+
+            {menuAberto && (
+              <div style={dropdownStyle}>
+                <button
+                  type="button"
+                  style={dropdownItemStyle}
+                  onClick={() => {
+                    setMenuAberto(false);
+                    navigate("/aluno/perfil");
+                  }}
+                >
+                  Meu perfil
+                </button>
+                <button
+                  type="button"
+                  style={dropdownItemDangerStyle}
+                  onClick={sair}
+                >
+                  Sair
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
@@ -111,14 +171,12 @@ function AlunoShell() {
         onClose={() => setDrawerOpen(false)}
         items={menuAluno}
         basePath="/aluno"
-        hideExitOnHome
       />
 
       <div className="aluno-body">
         <Sidebar
           items={menuAluno}
           basePath="/aluno"
-          hideExitOnHome
           className="app-sidebar--desktop"
         />
 
@@ -153,6 +211,36 @@ const badgeStyle = {
   alignItems: "center",
   justifyContent: "center",
   fontWeight: "bold",
+};
+
+const dropdownStyle = {
+  position: "absolute",
+  top: "52px",
+  right: "0",
+  background: "#fff",
+  borderRadius: "12px",
+  boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
+  padding: "8px",
+  minWidth: "170px",
+  zIndex: 9999,
+
+};
+
+const dropdownItemStyle = {
+  width: "100%",
+  border: "none",
+  background: "transparent",
+  padding: "10px 12px",
+  textAlign: "left",
+  cursor: "pointer",
+  borderRadius: "8px",
+  color: "#0f172a",
+  fontWeight: 600,
+};
+
+const dropdownItemDangerStyle = {
+  ...dropdownItemStyle,
+  color: "#dc2626",
 };
 
 export default AlunoShell;
