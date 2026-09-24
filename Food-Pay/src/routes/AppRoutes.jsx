@@ -9,7 +9,7 @@
  *   que renderiza o header/sidebar e injeta as páginas via <Outlet>.
  * - Rota coringa (*) redireciona para a tela inicial.
  */
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import EscolhaAcesso  from "../pages/auth/EscolhaAcesso";
@@ -51,7 +51,7 @@ import PerfilResponsavel        from "../pages/responsavel/Perfil";
 
 function AppRoutes() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         {/* Rotas públicas */}
         <Route path="/"                element={<EscolhaAcesso />} />
@@ -120,7 +120,7 @@ function AppRoutes() {
         {/* Rota não encontrada → tela inicial */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
